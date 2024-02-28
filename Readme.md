@@ -105,3 +105,16 @@
 - written in .env file
 - AccessToken -> Access tokens are short-lived tokens that grant access to protected resources on behalf of an authenticated user.
 - RefreshToken -> Refresh tokens are long-lived tokens used to obtain new access tokens after the original access token expires.
+
+### Uploading File in backend - using multer npm package and cloudinary(Use cloudinary documentation for more clearance)
+
+- Will keep it as a utility in utils folder
+- We will use multer npm package for uploading files and cloudinary
+- npm i cloudinary multer
+- Setting Cloudinary -> import and then configure
+- We will not upload directly through cloudinary but using multer will keep the file on our server for safety purpose and then upload using cloudinary
+- Will use nodeJS file system fs
+- Will also create a middleware file(multer functionality)
+- Functionalities of multer can be read on the official documentation
+
+### Note:- Above code is just the professional setup and is the minimum thing we can do to handle the things professionally, further we will write our controllers and routes part and use the functionalities written above
