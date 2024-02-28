@@ -118,3 +118,18 @@
 - Functionalities of multer can be read on the official documentation
 
 ### Note:- Above code is just the professional setup and is the minimum thing we can do to handle the things professionally, further we will write our controllers and routes part and use the functionalities written above
+
+### HTTP CRASH COURSE (Hyper Text Transfer Protocol)
+
+- Imgaes regarding this also in img folder
+- Difference between http and https is security, in https there is another layer of security where the data is not accessed in between, communication is done in between server and client
+- URL (Uniform Resource Locator): A URL is a specific type of Uniform Resource Identifier (URI) that provides the means to access a resource on the internet.
+- URI (Uniform Resource Identifier): A URI is a string of characters used to identify a resource, either by location, name, or both.
+- URN (Uniform Resource Name): A URN is a type of URI that is used to uniquely identify a resource without specifying its location or how to access it.
+- metadata: key-value sent along with request and response
+- Request Headers -> from client
+- Response Headers -> from server
+- Representation Headers -> encoding/compression
+- Payload Header -> data
+
+### Complete Guide for Router and Controller
