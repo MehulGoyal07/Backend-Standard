@@ -133,3 +133,17 @@
 - Payload Header -> data
 
 ### Complete Guide for Router and Controller
+
+- Creating user controller in (user.controller.js)
+- Importing our created asyncHandler function
+- Now, the routes need to be created(user.routes.js) where we can use the functions inside user.controller.js
+- The routes are imported in app.js
+- From there the control set back to user.routes.js
+
+### General Code Flow
+
+- In app.js we hit app.use("/api/v1/users", userRoute); from here the control is passed to userRoute in user.routes.js
+- Now we can access all the methods by adding /register etc...
+- From router the control is send to user.controller.js where the functions/logic is written
+- Inside functions we have used asyncHandler which is a higher order function
+- The response is seen through postman

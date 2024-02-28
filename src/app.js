@@ -29,6 +29,17 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 
 // setting and accesing cookies such that performing CRUD operations
-app.use(express.cookieParser());
+// app.use(express.cookieParser());
+
+// Routes Import
+import userRoute from "./routes/user.routes.js";
+
+// Routes declaration - done using app.use, directly not used as in seperate file
+// app.use("/users", userRoute)
+
+// Instead of giving directly /users we give /api/v1/users
+app.use("/api/v1/users", userRoute);
+// from here the control is passed to user.routes.js
+// https://localhost:8000/api/v1/users then followed by /register or /login etc.
 
 export { app };
