@@ -1,10 +1,10 @@
 # Backend Notes
 
-# Learning concepts used in designing backend
+## Learning concepts used in designing backend
 
-# Learning standard way of coding
+## Learning standard way of coding
 
-# Project Setup
+### Project Setup
 
 - package.json using npm init
 - node modules using npm i express
@@ -13,7 +13,7 @@
 - src folders containing controllers, db, middlewares, models, routes, utils, app.js, constant.js, index.js can be done using touch and mkdir command to create files and folders respectively
 - prettier npm also used to get industry standards, two files .prettierrc and .prettierignore are also added
 
-# MongoDB Connection
+### MongoDB Connection
 
 - Go on mogodb atlas, create account and setup the initial requirements such that create cluster, set username, password and IP address
 - Copy the connection string and paste in .env and replace password there and remove last backslash
@@ -28,7 +28,7 @@
 - Therefore, we have to take hold of the promise using then() and catch()
 - Then we have to use app to listen in then() block such that start our server on localhost 8000
 
-# Understanding Express
+### Understanding Express
 
 - Will play around request and response
 - Have to install npm i cookie-parser (middleware)
@@ -40,19 +40,19 @@
 - Middlewares used to get hold/check in between the request and response process, eg: checking for loggedIn or not
 - A sequence is followed while setting middlewares
 
-# Understanding AsyncHandler(src/utils/asyncHandler.js)
+### Understanding AsyncHandler(src/utils/asyncHandler.js)
 
 - In summary, express-async-handler simplifies error handling for asynchronous operations in Express. js, making your code cleaner and more readable by eliminating the need for repetitive try/catch blocks in each async route handler.
 - Two methods are specified inside "asyncHandler.js" that is using promises and other using try-catch block
 
-# Understanding ApiError.js(src/utils/ApiError.js)
+### Understanding ApiError.js(src/utils/ApiError.js)
 
 - Handling ApiErrors by extending Error class and overriding some functionalities
 - NodeJs provides us with error class
 - By creating this file we are playing with the concept of inheritance, so that we can override some functionalities and handle errors in our way
 - In summary, this ApiError class allows you to create custom error objects specifically tailored for API-related errors, including status code, error message, additional error details, and stack trace. It provides a structured way to handle and represent errors within an API system.
 
-# Basics of server status code
+### Basics of server status code
 
 - Informational responses (100-199)
 - Successful responses (200-299)
@@ -60,7 +60,48 @@
 - Client Error responses (400-499)
 - Server Error responses (500-599)
 
-# Understanding ApiResponse.js(src/utils/ApiError.js)
+### Understanding ApiResponse.js(src/utils/ApiError.js)
 
 - As handling errors, we can also handle ApiResponse in a separate file
 - Node or Express doesn't provide any extended class for this but we can make our own
+- This class is designed to represent responses returned by an API.
+- The class is intended to simplify the creation of API responses by encapsulating the status code, data, and message within an ApiResponse object. The success property provides a convenient way to determine the success of the API operation based on the status code.
+
+### Understanding Middlewares
+
+- Middleware in web development refers to a software layer that sits between the client and server and is responsible for handling various tasks related to HTTP requests and responses.
+
+### Creating User Model(user.model.js) -> refer to User_Videos_Overview.png
+
+- The userSchema contains username, email, fullname, avatar, coverImage, watchHistory, password, refreshToken
+
+### Creating Video Model(video.model.js) -> refer to User_Videos_Overview.png
+
+- The videoSchema contains videoFile, thumbnail, title,description, duration, views, isPublished, owner
+
+### Understanding - npm package mongoose-aggregate-paginate-v2 used for UserModel
+
+- WatchHistory makes the user model a little complex
+- Writing user model is itself a complex model therefore, we will use a mongoose package npm i mongoose-aggregate-paginate-v2
+- It allows us to write aggregation query
+- The package will be imported in video.model.js
+- Just before exporting the file, we will inject the plugin
+
+### Understanding - npm package bcrypt - used in user.model.js
+
+- It's a simple library which hashes our password
+- Used for safety purpose, such that avoiding data breaching
+- It will encrypt and decrypt the password on it's own
+- We can't directly use the functionality of bcrypt
+- We will use hooks to get a hold of it
+- Pre Hook - Pre middleware functions are executed one after another, when each middleware calls next
+- In brief if user is going to save data then just before that using this pre-hook(we can pass the data and destructure it)
+
+### Understanding - npm package jwt(jsonwebtoken) - used in user.model.js
+
+- Used to generate or get the tokens such that sending username, email in form of encrypted token which is not human readable
+- But can understand from payloads
+- JWT is a brearer token(like an key whoever holds it will get the data)
+- written in .env file
+- AccessToken -> Access tokens are short-lived tokens that grant access to protected resources on behalf of an authenticated user.
+- RefreshToken -> Refresh tokens are long-lived tokens used to obtain new access tokens after the original access token expires.
