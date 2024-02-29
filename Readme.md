@@ -160,3 +160,7 @@
 - 8. check for user creation
 - 9. return response
 - NOTE: We can't directly access files, that's why we will use middlewares in user.routes.js
+- After sending request from postman the request is send successfully
+- The image is stored in the cloudinary and url in the DB
+- User is registered successfully
+- Final task is to remove the files from our local storage once uploaded on cloudinary

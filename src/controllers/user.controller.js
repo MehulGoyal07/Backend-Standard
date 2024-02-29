@@ -41,12 +41,12 @@ const registerUser = asyncHandler(async (req, res) => {
   // Knaive approach
   // User.findOne({username})
   // Professionally checking multiple values
-  const existedUser = User.findOne({
+  const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
 
   if (existedUser) {
-    throw ApiError(409, "User with email or password already exists");
+    throw new ApiError(409, "User with email or password already exists");
   }
 
   // Now checking for files
@@ -56,7 +56,17 @@ const registerUser = asyncHandler(async (req, res) => {
   // '?' is for checking whether anything received or not
   const avatarLocalPath = req.files?.avatar[0]?.path;
   // also getting hold of cover image
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+  // Handling coverImage if not passed
+  let coverImageLocalPath;
+  if (
+    req.files &&
+    Array.isArray(req.files.coverImage) &&
+    req.files.coverImage.length > 0
+  ) {
+    coverImageLocalPath = req.files.coverImage[0].path;
+  }
 
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar image is required");
@@ -87,8 +97,7 @@ const registerUser = asyncHandler(async (req, res) => {
   // we will use findById and select
   // Inside select the fields which are not required are passed
   // such that passed with a ' - ' sign - little weird syntax
-  const createdUser = await user
-    .findById(user._id)
+  const createdUser = await User.findById(user._id) // _id is available
     .select("-password -refreshToken");
 
   // Now checking and giving error from our side if any
@@ -97,9 +106,9 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   // returning API Response
-  return res.status(201).json(
-    new ApiResponse(200, createdUser, "User registered successfully")
-  )
+  return res
+    .status(201)
+    .json(new ApiResponse(200, createdUser, "User registered successfully"));
 });
 
 export { registerUser };
