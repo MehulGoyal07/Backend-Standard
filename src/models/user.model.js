@@ -68,7 +68,7 @@ userSchema.pre("save", async function (next) {
 
   // using bcrypt hash function
   // passing the password and number of rounds to add complexity to password
-  this.password = bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 

@@ -147,3 +147,16 @@
 - From router the control is send to user.controller.js where the functions/logic is written
 - Inside functions we have used asyncHandler which is a higher order function
 - The response is seen through postman
+
+### Logic Building - Designing Register Controller - STEPS BELOW
+
+- 1. get user details from frontend (here we can get via postman)
+- 2. validation - not empty
+- 3. check is user already exists: username, email
+- 4. check for images, check for avatar
+- 5. upload them to cloudinary, avatar
+- 6. create user object - create entry in DB
+- 7. remove password and refresh token field from response
+- 8. check for user creation
+- 9. return response
+- NOTE: We can't directly access files, that's why we will use middlewares in user.routes.js
