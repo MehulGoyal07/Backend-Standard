@@ -1,6 +1,11 @@
 import { Router } from "express";
-import { registerUser } from "../controllers/user.controller.js";
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+} from "../controllers/user.controller.js";
 // We can't directly access files, that's why we will use middlewares in user.routes.js
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 // We will use the middleware before the response is send
 
@@ -25,4 +30,10 @@ router.route("/register").post(
   registerUser
 );
 
+router.route("/login").post(loginUser);
+
+// secured routes using auth middleware
+// we will inject verifyJWT before executing logout user
+// we can inject multiple middlewares if any
+router.route("/logout").post(verifyJWT, logoutUser);
 export default router;

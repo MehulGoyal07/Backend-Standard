@@ -1,7 +1,7 @@
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import "dotenv/config";
 import express from "express";
-// import cookieParser from "cookie-parser";
-import cors from "cors";
 
 const app = express();
 
@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 
 // setting and accesing cookies such that performing CRUD operations
-// app.use(express.cookieParser());
+app.use(cookieParser());
 
 // Routes Import
 import userRoute from "./routes/user.routes.js";

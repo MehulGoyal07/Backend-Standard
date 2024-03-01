@@ -4,6 +4,27 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
+const generateAccessAndRefreshTokens = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
+
+    // We have to also store refreshToken in the DB
+    user.refreshToken = refreshToken;
+
+    // Saving in DB but haven't to check the validity
+    await user.save({ validateBeforeSave: false });
+
+    return { accessToken, refreshToken };
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "something went wrong while generating refresh and access tokens"
+    );
+  }
+};
+
 // Steps for registering user
 // get user details from frontend (here we can get via postman)
 // validation - not empty
@@ -111,4 +132,95 @@ const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, createdUser, "User registered successfully"));
 });
 
-export { registerUser };
+const loginUser = asyncHandler(async (req, res) => {
+  // Taking data from body
+  const { email, username, password } = req.body;
+
+  // Checking if any of the username or email is passed by the user
+  if (!username && !email) {
+    throw new ApiError(400, "username or email is required");
+  }
+
+  // Checking via both email and username
+  const user = await User.findOne({
+    $or: [{ username, email }],
+  });
+
+  // Checking if user found or not
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  // Checking password correct or not using self created method in user.model.js
+  // isPasswordCorrect is available with the user reegistered in our DB
+  const isPasswordValid = await user.isPasswordCorrect(password);
+
+  if (!isPasswordValid) {
+    throw new ApiError(401, "Invalid User  Credentials");
+  }
+
+  // If password is correct then make access and refresh tokens
+  // It will be done multiple times
+  // Better approach create seperate methods in same file for both of them
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+    user._id
+  );
+
+  // Some fields are not required, we can again query the db or update the user
+  const loggedInUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
+
+  // Sending Cookie
+  // We have to make some options so that the modifications can be done on server side
+  // but visible to both sides
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  // Now sending cookie using cookie() method
+  // can send multiple cookies just by chaining
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(
+        200,
+        {
+          user: loggedInUser,
+          accessToken,
+          refreshToken,
+        },
+        "User Logged in successfully"
+      )
+    );
+});
+
+const logoutUser = asyncHandler(async (req, res) => {
+  // Now, due to middleware, here we have access to req.user
+  // we will findById and make refresh token undefined using operator $set
+  User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        refreshToken: undefined,
+      },
+    },
+    { new: true } // making it true we will not get the previous values
+  );
+
+  // clearing cookies
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User Logged out successfully"));
+});
+export { loginUser, logoutUser, registerUser };

@@ -164,3 +164,25 @@
 - The image is stored in the cloudinary and url in the DB
 - User is registered successfully
 - Final task is to remove the files from our local storage once uploaded on cloudinary
+
+### Access and Refresh Tokens
+
+- AccessToken -> Access tokens are short-lived tokens that grant access to protected resources on behalf of an authenticated user.
+- RefreshToken -> Refresh tokens are long-lived tokens used to obtain new access tokens after the original access token expires.
+
+### Designing Login Controller - STEPS 
+
+- req body -> data
+- username or email
+- find the user
+- password check if not correct then display error otherwise move further
+- Grant access and refresh tokens
+- Send cookie
+
+### Designing Logout Controller
+
+- We need to clear the cookies
+- Also remove the refresh token send to DB
+- We will design seperate middlewares like functionality as we have to get the reference to clear the cookies and remove tokens
+- Creating our own auth.middleware.js in src/middlewares
+- We will inject a functionality(Object) to the req and then use it to check via help of tokens 
